@@ -110,6 +110,8 @@ build_xz()
   make install
   make distclean
 
+  cp ${PROJ_ROOT}/Modulemaps/lzma.modulemap ${PREFIX}/lib/module.modulemap
+
   popd
 )
 
@@ -134,6 +136,8 @@ build_openssl()
   make install_dev
   make distclean
   rm ${CONF_FILE}
+
+  cp ${PROJ_ROOT}/Modulemaps/openssl.modulemap ${PREFIX}/lib/module.modulemap
 
   popd
 )
@@ -172,6 +176,8 @@ build_libevent()
   make clean
   rm -rf build-aux
 
+  cp ${PROJ_ROOT}/Modulemaps/libevent.modulemap ${PREFIX}/lib/module.modulemap
+
   popd
 )
 
@@ -179,7 +185,8 @@ build_tor()
 (
   build_init tor $@
 
-  pushd ${DEPS_ROOT}/bc-tor
+  SRC_ROOT=${DEPS_ROOT}/bc-tor
+  pushd ${SRC_ROOT}
 
   if [[ ! -f ./configure ]]; then
       ./autogen.sh --add-missing
@@ -195,7 +202,7 @@ build_tor()
   TARGET_DIR=${BUILD_ROOT}/${TARGET}
 
   export CPPFLAGS="${CPPFLAGS} \
-    -I${DEPS_ROOT}/bc-tor/core \
+    -I${SRC_ROOT}/core \
     -I${DEPS_ROOT}/openssl/include \
     -I${PREFIX} \
     -I${DEPS_ROOT}/libevent/include \
@@ -246,15 +253,44 @@ build_tor()
 
   make -j${CPU_COUNT}
 
-  cp micro-revision.i ${PREFIX}/micro-revision.i
+  PREFIX_LIB=${PREFIX}/lib
+  mkdir -p ${PREFIX_LIB}
 
   for LIB in ${LIBS[@]}
   do
-      cp $LIB "${PREFIX}/$(basename $LIB)"
+      cp $LIB "${PREFIX_LIB}/$(basename $LIB)"
   done
+
+  cp micro-revision.i ${PREFIX_LIB}
+
+  FEATURE_API=feature/api
+  LIB_LOG=lib/log
+  LIB_CC=lib/cc
+  LIB_DEFS=lib/defs
+  LIB_TESTSUPPORT=lib/testsupport
+  PREFIX_INCLUDE=${PREFIX}/include
+  SRC_ROOT_SRC=${SRC_ROOT}/src
+
+  # Main API include
+  mkdir -p ${PREFIX_INCLUDE}/${FEATURE_API}
+  cp ${SRC_ROOT_SRC}/${FEATURE_API}/tor_api.h ${PREFIX_INCLUDE}/${FEATURE_API}/
+  # Internal includes for logging. Unstable and may change.
+  cp orconfig.h ${PREFIX_INCLUDE}/
+  mkdir -p ${PREFIX_INCLUDE}/${LIB_LOG}
+  cp ${SRC_ROOT_SRC}/${LIB_LOG}/log.h ${PREFIX_INCLUDE}/${LIB_LOG}/
+  mkdir -p ${PREFIX_INCLUDE}/${LIB_CC}
+  cp ${SRC_ROOT_SRC}/${LIB_CC}/torint.h ${PREFIX_INCLUDE}/${LIB_CC}/
+  cp ${SRC_ROOT_SRC}/${LIB_CC}/compat_compiler.h ${PREFIX_INCLUDE}/${LIB_CC}/
+  mkdir -p ${PREFIX_INCLUDE}/${LIB_DEFS}
+  cp ${SRC_ROOT_SRC}/${LIB_DEFS}/logging_types.h ${PREFIX_INCLUDE}/${LIB_DEFS}/
+  mkdir -p ${PREFIX_INCLUDE}/${LIB_TESTSUPPORT}
+  cp ${SRC_ROOT_SRC}/${LIB_TESTSUPPORT}/testsupport.h ${PREFIX_INCLUDE}/${LIB_TESTSUPPORT}/
 
   make clean
   rm -f src/lib/cc/orconfig.h
+  rm -rf ${PSEUDO_SYS_INCLUDE_DIR}
+
+  cp ${PROJ_ROOT}/Modulemaps/ctor.modulemap ${PREFIX}/lib/module.modulemap
 
   popd
 )
@@ -275,37 +311,37 @@ build_c_libraries()
   X86_MAC=(     x86_64-apple-darwin         macosx           -fembed-bitcode         -mmacosx-version-min=${MIN_MAC_VERSION})
   ARM_MAC=(     arm64-apple-darwin          macosx           -fembed-bitcode         -mmacosx-version-min=${MIN_MAC_VERSION})
 
-  build_xz ${ARM_IOS[@]}
-  build_xz ${X86_CATALYST[@]}
-  build_xz ${ARM_CATALYST[@]}
-  build_xz ${X86_IOS_SIM[@]}
-  build_xz ${ARM_IOS_SIM[@]}
-  build_xz ${X86_MAC[@]}
-  build_xz ${ARM_MAC[@]}
+#   build_xz ${ARM_IOS[@]}
+#   build_xz ${X86_CATALYST[@]}
+#   build_xz ${ARM_CATALYST[@]}
+#   build_xz ${X86_IOS_SIM[@]}
+#   build_xz ${ARM_IOS_SIM[@]}
+#   build_xz ${X86_MAC[@]}
+#   build_xz ${ARM_MAC[@]}
 
-  build_openssl ${ARM_IOS[@]}
-  build_openssl ${X86_CATALYST[@]}
-  build_openssl ${ARM_CATALYST[@]}
-  build_openssl ${X86_IOS_SIM[@]}
-  build_openssl ${ARM_IOS_SIM[@]}
-  build_openssl ${X86_MAC[@]}
-  build_openssl ${ARM_MAC[@]}
+#   build_openssl ${ARM_IOS[@]}
+#   build_openssl ${X86_CATALYST[@]}
+#   build_openssl ${ARM_CATALYST[@]}
+#   build_openssl ${X86_IOS_SIM[@]}
+#   build_openssl ${ARM_IOS_SIM[@]}
+#   build_openssl ${X86_MAC[@]}
+#   build_openssl ${ARM_MAC[@]}
 
-  build_libevent ${ARM_IOS[@]}
-  build_libevent ${X86_CATALYST[@]}
-  build_libevent ${ARM_CATALYST[@]}
-  build_libevent ${X86_IOS_SIM[@]}
-  build_libevent ${ARM_IOS_SIM[@]}
-  build_libevent ${X86_MAC[@]}
-  build_libevent ${ARM_MAC[@]}
+#   build_libevent ${ARM_IOS[@]}
+#   build_libevent ${X86_CATALYST[@]}
+#   build_libevent ${ARM_CATALYST[@]}
+#   build_libevent ${X86_IOS_SIM[@]}
+#   build_libevent ${ARM_IOS_SIM[@]}
+#   build_libevent ${X86_MAC[@]}
+#   build_libevent ${ARM_MAC[@]}
 
-  build_tor ${ARM_IOS[@]}
-  build_tor ${X86_CATALYST[@]}
-  build_tor ${ARM_CATALYST[@]}
-  build_tor ${X86_IOS_SIM[@]}
+#   build_tor ${ARM_IOS[@]}
+#   build_tor ${X86_CATALYST[@]}
+#   build_tor ${ARM_CATALYST[@]}
+#   build_tor ${X86_IOS_SIM[@]}
   build_tor ${ARM_IOS_SIM[@]}
-  build_tor ${X86_MAC[@]}
-  build_tor ${ARM_MAC[@]}
+#   build_tor ${X86_MAC[@]}
+#   build_tor ${ARM_MAC[@]}
 )
 
 build_framework()
@@ -465,12 +501,12 @@ build_frameworks()
   ARM_MAC=(      arm64-apple-darwin          macosx           NONE             NO        bitcode  MACOSX_DEPLOYMENT_TARGET=${MIN_MAC_VERSION})
 
   build_framework ${ARM_IOS[@]}
-  build_framework ${X86_CATALYST[@]}
-  build_framework ${ARM_CATALYST[@]}
-  build_framework ${X86_IOS_SIM[@]}
-  build_framework ${ARM_IOS_SIM[@]}
-  build_framework ${X86_MAC[@]}
-  build_framework ${ARM_MAC[@]}
+#   build_framework ${X86_CATALYST[@]}
+#   build_framework ${ARM_CATALYST[@]}
+#   build_framework ${X86_IOS_SIM[@]}
+#   build_framework ${ARM_IOS_SIM[@]}
+#   build_framework ${X86_MAC[@]}
+#   build_framework ${ARM_MAC[@]}
 )
 
 build_fat_framework_variant()

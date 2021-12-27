@@ -1,0 +1,17 @@
+module lzma {
+    header "../include/lzma.h"
+    header "../include/lzma/base.h"
+    header "../include/lzma/bcj.h"
+    header "../include/lzma/block.h"
+    header "../include/lzma/check.h"
+    header "../include/lzma/container.h"
+    header "../include/lzma/delta.h"
+    header "../include/lzma/filter.h"
+    header "../include/lzma/hardware.h"
+    header "../include/lzma/index_hash.h"
+    header "../include/lzma/index.h"
+    header "../include/lzma/lzma12.h"
+    header "../include/lzma/stream_flags.h"
+    header "../include/lzma/version.h"
+    header "../include/lzma/vli.h"
+}
