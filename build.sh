@@ -87,7 +87,7 @@ build_xz()
   pushd ${DEPS_ROOT}/bc-xz
 
   if [[ ! -f ./configure ]]; then
-      ./autogen.sh
+      ./autogen.sh --no-po4a
   fi
 
   make distclean 2>/dev/null ||:
@@ -144,9 +144,7 @@ build_libevent()
 
   pushd ${DEPS_ROOT}/libevent
 
-  if [[ ! -f ./configure ]]; then
-      ./autogen.sh
-  fi
+  ./autogen.sh
 
   make distclean 2>/dev/null ||:
   rm -rf "${PREFIX}/"
@@ -277,37 +275,37 @@ build_c_libraries()
   X86_MAC=(     x86_64-apple-darwin         macosx           -fembed-bitcode         -mmacosx-version-min=${MIN_MAC_VERSION})
   ARM_MAC=(     arm64-apple-darwin          macosx           -fembed-bitcode         -mmacosx-version-min=${MIN_MAC_VERSION})
 
-#   build_xz ${ARM_IOS[@]}
-#   build_xz ${X86_CATALYST[@]}
-#   build_xz ${ARM_CATALYST[@]}
-#   build_xz ${X86_IOS_SIM[@]}
-#   build_xz ${ARM_IOS_SIM[@]}
-#   build_xz ${X86_MAC[@]}
-#   build_xz ${ARM_MAC[@]}
+  build_xz ${ARM_IOS[@]}
+  build_xz ${X86_CATALYST[@]}
+  build_xz ${ARM_CATALYST[@]}
+  build_xz ${X86_IOS_SIM[@]}
+  build_xz ${ARM_IOS_SIM[@]}
+  build_xz ${X86_MAC[@]}
+  build_xz ${ARM_MAC[@]}
 
   build_openssl ${ARM_IOS[@]}
-#   build_openssl ${X86_CATALYST[@]}
-#   build_openssl ${ARM_CATALYST[@]}
-#   build_openssl ${X86_IOS_SIM[@]}
-#   build_openssl ${ARM_IOS_SIM[@]}
-#   build_openssl ${X86_MAC[@]}
-#   build_openssl ${ARM_MAC[@]}
+  build_openssl ${X86_CATALYST[@]}
+  build_openssl ${ARM_CATALYST[@]}
+  build_openssl ${X86_IOS_SIM[@]}
+  build_openssl ${ARM_IOS_SIM[@]}
+  build_openssl ${X86_MAC[@]}
+  build_openssl ${ARM_MAC[@]}
 
-#   build_libevent ${ARM_IOS[@]}
-#   build_libevent ${X86_CATALYST[@]}
-#   build_libevent ${ARM_CATALYST[@]}
-#   build_libevent ${X86_IOS_SIM[@]}
-#   build_libevent ${ARM_IOS_SIM[@]}
-#   build_libevent ${X86_MAC[@]}
-#   build_libevent ${ARM_MAC[@]}
+  build_libevent ${ARM_IOS[@]}
+  build_libevent ${X86_CATALYST[@]}
+  build_libevent ${ARM_CATALYST[@]}
+  build_libevent ${X86_IOS_SIM[@]}
+  build_libevent ${ARM_IOS_SIM[@]}
+  build_libevent ${X86_MAC[@]}
+  build_libevent ${ARM_MAC[@]}
 
-#   build_tor ${ARM_IOS[@]}
-#   build_tor ${X86_CATALYST[@]}
-#   build_tor ${ARM_CATALYST[@]}
-#   build_tor ${X86_IOS_SIM[@]}
-#   build_tor ${ARM_IOS_SIM[@]}
-#   build_tor ${X86_MAC[@]}
-#   build_tor ${ARM_MAC[@]}
+  build_tor ${ARM_IOS[@]}
+  build_tor ${X86_CATALYST[@]}
+  build_tor ${ARM_CATALYST[@]}
+  build_tor ${X86_IOS_SIM[@]}
+  build_tor ${ARM_IOS_SIM[@]}
+  build_tor ${X86_MAC[@]}
+  build_tor ${ARM_MAC[@]}
 )
 
 build_framework()
@@ -569,7 +567,7 @@ build_xcframeworks()
 build_all()
 (
   CONTEXT=subshell
-#   get_dependencies
+  get_dependencies
   build_c_libraries
 #   build_frameworks
 #   build_fat_frameworks

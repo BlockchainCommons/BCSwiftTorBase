@@ -6,3 +6,4 @@ rm -rf deps/libevent
 rm -rf deps/openssl
 rm -rf deps/bc-tor
 rm -rf deps/bc-xz
+echo -n > buildlog.txt
