@@ -1,0 +1,12 @@
+[submodule "deps/bc-xz"]
+	path = deps/bc-xz
+	url = https://github.com/BlockchainCommons/bc-xz.git
+[submodule "deps/openssl"]
+	path = deps/openssl
+	url = git://github.com/openssl/openssl.git
+[submodule "deps/libevent"]
+	path = deps/libevent
+	url = https://github.com/libevent/libevent.git
+[submodule "deps/bc-tor"]
+	path = deps/bc-tor
+	url = https://github.com/BlockchainCommons/bc-tor.git
