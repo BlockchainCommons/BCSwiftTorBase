@@ -10,7 +10,7 @@
 		790E586927799561005136DB /* Tor.docc in Sources */ = {isa = PBXBuildFile; fileRef = 790E586827799561005136DB /* Tor.docc */; };
 		790E586F27799561005136DB /* Tor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 790E586427799561005136DB /* Tor.framework */; };
 		790E587427799561005136DB /* TorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790E587327799561005136DB /* TorTests.swift */; };
-		790E589227799672005136DB /* Hello.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790E589127799672005136DB /* Hello.swift */; };
+		790E589227799672005136DB /* TorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790E589127799672005136DB /* TorUtils.swift */; };
 		790E58E72779C104005136DB /* Tor.h in Headers */ = {isa = PBXBuildFile; fileRef = 790E58E62779C104005136DB /* Tor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		790E58EA2779ED57005136DB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 790E58E92779ECF0005136DB /* libz.tbd */; };
 /* End PBXBuildFile section */
@@ -30,7 +30,7 @@
 		790E586827799561005136DB /* Tor.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Tor.docc; sourceTree = "<group>"; };
 		790E586E27799561005136DB /* TorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		790E587327799561005136DB /* TorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TorTests.swift; sourceTree = "<group>"; };
-		790E589127799672005136DB /* Hello.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hello.swift; sourceTree = "<group>"; };
+		790E589127799672005136DB /* TorUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TorUtils.swift; sourceTree = "<group>"; };
 		790E58E62779C104005136DB /* Tor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tor.h; sourceTree = "<group>"; };
 		790E58E92779ECF0005136DB /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -79,7 +79,7 @@
 			children = (
 				790E586827799561005136DB /* Tor.docc */,
 				790E58E62779C104005136DB /* Tor.h */,
-				790E589127799672005136DB /* Hello.swift */,
+				790E589127799672005136DB /* TorUtils.swift */,
 			);
 			path = Tor;
 			sourceTree = "<group>";
@@ -209,7 +209,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				790E589227799672005136DB /* Hello.swift in Sources */,
+				790E589227799672005136DB /* TorUtils.swift in Sources */,
 				790E586927799561005136DB /* Tor.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -6,10 +6,10 @@
 //
 
 import XCTest
-@testable import Tor
+import Tor
 
 class TorTests: XCTestCase {
-    func testExample() throws {
-        hello()
+    func testVersionNumbers() throws {
+        print(dependencyVersionNumbers())
     }
 }
