@@ -1,4 +1,4 @@
-module openssl {
+module COpenSSL {
     header "../include/openssl/aes.h"
     header "../include/openssl/asn1.h"
     header "../include/openssl/asn1err.h"

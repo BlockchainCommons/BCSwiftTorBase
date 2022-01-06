@@ -1,8 +1,8 @@
 #!zsh
 set -e # abort if any command fails
 
-MIN_IOS_VERSION=13
-MIN_MAC_VERSION=11
+MIN_IOS_VERSION=15
+MIN_MAC_VERSION=12
 PROJ_ROOT=${PWD}
 DEPS_ROOT=${PROJ_ROOT}/deps
 BUILD_ROOT=${PROJ_ROOT}/build
@@ -110,7 +110,7 @@ build_xz()
   make install
   make distclean
 
-  cp ${PROJ_ROOT}/Modulemaps/lzma.modulemap ${PREFIX}/lib/module.modulemap
+  cp ${PROJ_ROOT}/Modulemaps/CLZMA.modulemap ${PREFIX}/lib/module.modulemap
 
   popd
 )
@@ -137,7 +137,7 @@ build_openssl()
   make distclean
   rm ${CONF_FILE}
 
-  cp ${PROJ_ROOT}/Modulemaps/openssl.modulemap ${PREFIX}/lib/module.modulemap
+  cp ${PROJ_ROOT}/Modulemaps/COpenSSL.modulemap ${PREFIX}/lib/module.modulemap
 
   popd
 )
@@ -176,7 +176,7 @@ build_libevent()
   make clean
   rm -rf build-aux
 
-  cp ${PROJ_ROOT}/Modulemaps/libevent.modulemap ${PREFIX}/lib/module.modulemap
+  cp ${PROJ_ROOT}/Modulemaps/CLibEvent.modulemap ${PREFIX}/lib/module.modulemap
 
   popd
 )
@@ -277,7 +277,7 @@ build_tor()
   # Internal includes for logging. Unstable and may change.
   cp orconfig.h ${PREFIX_INCLUDE}/
   mkdir -p ${PREFIX_INCLUDE}/${LIB_LOG}
-  cp ${SRC_ROOT_SRC}/${LIB_LOG}/log.h ${PREFIX_INCLUDE}/${LIB_LOG}/
+  cp ${SRC_ROOT_SRC}/${LIB_LOG}/log.h ${PREFIX_INCLUDE}/${LIB_LOG}/torlog.h
   mkdir -p ${PREFIX_INCLUDE}/${LIB_CC}
   cp ${SRC_ROOT_SRC}/${LIB_CC}/torint.h ${PREFIX_INCLUDE}/${LIB_CC}/
   cp ${SRC_ROOT_SRC}/${LIB_CC}/compat_compiler.h ${PREFIX_INCLUDE}/${LIB_CC}/
@@ -290,7 +290,7 @@ build_tor()
   rm -f src/lib/cc/orconfig.h
   rm -rf ${PSEUDO_SYS_INCLUDE_DIR}
 
-  cp ${PROJ_ROOT}/Modulemaps/ctor.modulemap ${PREFIX}/lib/module.modulemap
+  cp ${PROJ_ROOT}/Modulemaps/CTor.modulemap ${PREFIX}/lib/module.modulemap
 
   popd
 )
@@ -311,42 +311,42 @@ build_c_libraries()
   X86_MAC=(     x86_64-apple-darwin         macosx           -fembed-bitcode         -mmacosx-version-min=${MIN_MAC_VERSION})
   ARM_MAC=(     arm64-apple-darwin          macosx           -fembed-bitcode         -mmacosx-version-min=${MIN_MAC_VERSION})
 
-#   build_xz ${ARM_IOS[@]}
-#   build_xz ${X86_CATALYST[@]}
-#   build_xz ${ARM_CATALYST[@]}
-#   build_xz ${X86_IOS_SIM[@]}
-#   build_xz ${ARM_IOS_SIM[@]}
-#   build_xz ${X86_MAC[@]}
-#   build_xz ${ARM_MAC[@]}
+  build_xz ${ARM_IOS[@]}
+  build_xz ${X86_CATALYST[@]}
+  build_xz ${ARM_CATALYST[@]}
+  build_xz ${X86_IOS_SIM[@]}
+  build_xz ${ARM_IOS_SIM[@]}
+  build_xz ${X86_MAC[@]}
+  build_xz ${ARM_MAC[@]}
 
-#   build_openssl ${ARM_IOS[@]}
-#   build_openssl ${X86_CATALYST[@]}
-#   build_openssl ${ARM_CATALYST[@]}
-#   build_openssl ${X86_IOS_SIM[@]}
-#   build_openssl ${ARM_IOS_SIM[@]}
-#   build_openssl ${X86_MAC[@]}
-#   build_openssl ${ARM_MAC[@]}
+  build_openssl ${ARM_IOS[@]}
+  build_openssl ${X86_CATALYST[@]}
+  build_openssl ${ARM_CATALYST[@]}
+  build_openssl ${X86_IOS_SIM[@]}
+  build_openssl ${ARM_IOS_SIM[@]}
+  build_openssl ${X86_MAC[@]}
+  build_openssl ${ARM_MAC[@]}
 
-#   build_libevent ${ARM_IOS[@]}
-#   build_libevent ${X86_CATALYST[@]}
-#   build_libevent ${ARM_CATALYST[@]}
-#   build_libevent ${X86_IOS_SIM[@]}
-#   build_libevent ${ARM_IOS_SIM[@]}
-#   build_libevent ${X86_MAC[@]}
-#   build_libevent ${ARM_MAC[@]}
+  build_libevent ${ARM_IOS[@]}
+  build_libevent ${X86_CATALYST[@]}
+  build_libevent ${ARM_CATALYST[@]}
+  build_libevent ${X86_IOS_SIM[@]}
+  build_libevent ${ARM_IOS_SIM[@]}
+  build_libevent ${X86_MAC[@]}
+  build_libevent ${ARM_MAC[@]}
 
-#   build_tor ${ARM_IOS[@]}
-#   build_tor ${X86_CATALYST[@]}
-#   build_tor ${ARM_CATALYST[@]}
-#   build_tor ${X86_IOS_SIM[@]}
+  build_tor ${ARM_IOS[@]}
+  build_tor ${X86_CATALYST[@]}
+  build_tor ${ARM_CATALYST[@]}
+  build_tor ${X86_IOS_SIM[@]}
   build_tor ${ARM_IOS_SIM[@]}
-#   build_tor ${X86_MAC[@]}
-#   build_tor ${ARM_MAC[@]}
+  build_tor ${X86_MAC[@]}
+  build_tor ${ARM_MAC[@]}
 )
 
 build_framework()
 (
-  FRAMEWORK=Tor
+  FRAMEWORK=TorBase
   TARGET=$1
   SDK=$2
   PLATFORM_DIR=$3
@@ -358,69 +358,36 @@ build_framework()
   TARGET_ELEMS=("${(@s/-/)TARGET}")
   ARCHS=${TARGET_ELEMS[1]}
 
-  LIBS_NAMES=(liblzma/lib openssl/lib libevent/lib tor)
+  LIBS_NAMES=(liblzma openssl libevent tor)
+
   LIBS_PATHS=()
   for e in $LIBS_NAMES; do
-    LIBS_PATHS+=\"${BUILD_ROOT}/${TARGET}/${e}\"
+    LIBS_PATHS+=\"${BUILD_ROOT}/${TARGET}/${e}/lib\"
+  done
+
+  INCLUDE_PATHS=()
+  for e in $LIBS_NAMES; do
+    INCLUDE_PATHS+=\"${BUILD_ROOT}/${TARGET}/${e}/include\"
   done
 
   FRAMEWORK_ROOT=${PROJ_ROOT}/${FRAMEWORK}
 
-  PROJECT=${PROJ_ROOT}/BCTor.xcodeproj
-  SCHEME=BCTor
+  PROJECT=${PROJ_ROOT}/TorBase.xcodeproj
+  SCHEME=TorBase
   DEST_DIR=${BUILD_ROOT}/${TARGET}
   FRAMEWORK_DIR_NAME=${FRAMEWORK}.framework
   rm -rf ${DEST_DIR}/${FRAMEWORK_DIR_NAME}
 
   LIBS=(\
-    -levent_core \
-    -levent_extra \
-    -levent_pthreads \
-    -levent \
     -llzma \
     -lcrypto \
     -lssl \
-    -lcurve25519_donna \
-    -led25519_donna \
-    -led25519_ref10 \
-    -lkeccak-tiny \
-    -lor-trunnel \
-    -ltor-app \
-    -ltor-buf \
-    -ltor-compress \
-    -ltor-confmgt \
-    -ltor-container \
-    -ltor-crypt-ops \
-    -ltor-ctime \
-    -ltor-dispatch \
-    -ltor-encoding \
-    -ltor-err \
-    -ltor-evloop \
-    -ltor-fdio \
-    -ltor-fs \
-    -ltor-geoip \
-    -ltor-intmath \
-    -ltor-llharden \
-    -ltor-lock \
-    -ltor-log \
-    -ltor-malloc \
-    -ltor-math \
-    -ltor-memarea \
-    -ltor-meminfo \
-    -ltor-net \
-    -ltor-osinfo \
-    -ltor-process \
-    -ltor-pubsub \
-    -ltor-sandbox \
-    -ltor-smartlist-core \
-    -ltor-string \
-    -ltor-term \
-    -ltor-thread \
-    -ltor-time \
-    -ltor-tls \
-    -ltor-trace \
-    -ltor-version \
-    -ltor-wallclock \
+    -levent \
+    -levent_pthreads \
+    -levent_openssl \
+    -levent_core \
+    -levent_extra \
+    -ltor \
   )
 
   ARGS=(\
@@ -430,6 +397,7 @@ build_framework()
     -sdk ${SDK} \
     ${VERSION} \
     LIBRARY_SEARCH_PATHS="${LIBS_PATHS}" \
+    HEADER_SEARCH_PATHS="${INCLUDE_PATHS}" \
     ONLY_ACTIVE_ARCH=YES \
     ARCHS=${ARCHS} \
     SKIP_INSTALL=NO \
@@ -501,12 +469,12 @@ build_frameworks()
   ARM_MAC=(      arm64-apple-darwin          macosx           NONE             NO        bitcode  MACOSX_DEPLOYMENT_TARGET=${MIN_MAC_VERSION})
 
   build_framework ${ARM_IOS[@]}
-#   build_framework ${X86_CATALYST[@]}
-#   build_framework ${ARM_CATALYST[@]}
-#   build_framework ${X86_IOS_SIM[@]}
-#   build_framework ${ARM_IOS_SIM[@]}
-#   build_framework ${X86_MAC[@]}
-#   build_framework ${ARM_MAC[@]}
+  build_framework ${X86_CATALYST[@]}
+  build_framework ${ARM_CATALYST[@]}
+  build_framework ${X86_IOS_SIM[@]}
+  build_framework ${ARM_IOS_SIM[@]}
+  build_framework ${X86_MAC[@]}
+  build_framework ${ARM_MAC[@]}
 )
 
 build_fat_framework_variant()
@@ -555,7 +523,7 @@ build_fat_frameworks()
 (
   progress_section "Building Fat Frameworks"
 
-  build_fat_framework Tor
+  build_fat_framework TorBase
 )
 
 build_xcframework()
@@ -597,17 +565,18 @@ build_xcframeworks()
 (
   progress_section "Building XCFramework"
 
-  build_xcframework Tor
+  build_xcframework TorBase
 )
 
 build_all()
 (
   CONTEXT=subshell
-  get_dependencies
-  build_c_libraries
-#   build_frameworks
-#   build_fat_frameworks
-#   build_xcframeworks
+
+#   get_dependencies
+#   build_c_libraries
+  build_frameworks
+  build_fat_frameworks
+  build_xcframeworks
 )
 
 CONTEXT=top

@@ -1,9 +1,9 @@
-module ctor {
+module CTor {
     header "../include/feature/api/tor_api.h"
     header "../include/orconfig.h"
     header "../include/lib/cc/compat_compiler.h"
     header "../include/lib/cc/torint.h"
     header "../include/lib/defs/logging_types.h"
-    header "../include/lib/log/log.h"
+    header "../include/lib/log/torlog.h"
     header "../include/lib/testsupport/testsupport.h"
 }

@@ -1,4 +1,4 @@
-module lzma {
+module CLZMA {
     header "../include/lzma.h"
     header "../include/lzma/base.h"
     header "../include/lzma/bcj.h"

@@ -1,0 +1,6 @@
+module CLibEvent {
+    header "../include/event2/event.h"
+    header "../include/event2/util.h"
+    header "../include/event2/visibility.h"
+    header "../include/event2/event-config.h"
+}
