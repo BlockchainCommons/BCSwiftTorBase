@@ -1,4 +1,4 @@
-# BCSwiftToreBase
+# BCSwiftTorBase
 
 Thin Swift wrapper around [Tor](https://github.com/torproject/tor) that has a new system for building a universal XCFramework for use with MacOSX, Mac Catalyst, iOS devices, and the iOS simulator across Intel and Apple Silicon (ARM).
 
