@@ -3,7 +3,7 @@
 	url = https://github.com/BlockchainCommons/bc-xz.git
 [submodule "deps/openssl"]
 	path = deps/openssl
-	url = git://github.com/openssl/openssl.git
+	url = https://github.com/openssl/openssl.git
 [submodule "deps/libevent"]
 	path = deps/libevent
 	url = https://github.com/libevent/libevent.git
